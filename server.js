@@ -27,7 +27,7 @@ app.use(cors());
 app.use(express.static(__dirname));
 
 app.get("/", function(req, res) {
-    res.send("OshSaroy server ishlayapti!");
+    res.sendFile(__dirname + "/index.html");
 });
 
 app.post("/order", function(req, res) {
