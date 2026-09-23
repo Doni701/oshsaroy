@@ -3,7 +3,7 @@ const cors = require("cors");
 
 
 
-const token = '8735943449:AAFAjn1XgPE9RcjWZqTlDG9QyO2LfVwTzpk';
+const token = process.env.BOT_TOKEN;
 
 
 const chatId = "8819760322";
