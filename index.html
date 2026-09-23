@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OshSaroy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+    <h1>OshSaroy</h1>
+    <p>Issiq osh va mazali taomlar</p>
+
+    <button id="cartButton">
+        🛒 Savat (<span id="cartCount">0</span>)
+    </button>
+</header>
+
+   <nav>
+    <button onclick="goToSection('oshlar')">Oshlar</button>
+    <button onclick="goToSection('salatlar')">Salatlar</button>
+    <button onclick="goToSection('ichimliklar')">Ichimliklar</button>
+    <button onclick="goToSection('muzqaymoq')">Muzqaymoq</button>
+</nav>
+    <main>
+
+        <h2 id="oshlar">🍚 Oshlar</h2>
+
+        <div class="products">
+
+            <div class="product">
+                <img src="https://images.unsplash.com/photo-1628294895950-9805252327bc?auto=format&fit=crop&w=600&q=80">
+                <h3>Bir kishilik osh</h3>
+                <p>45 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <img src="https://images.unsplash.com/photo-1628294895950-9805252327bc?auto=format&fit=crop&w=600&q=80">
+                <h3>Ikki kishilik osh</h3>
+                <p>90 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+        </div>
+
+        <h2 id="salatlar">🥗 Salatlar</h2>
+
+        <div class="products">
+
+            <div class="product">
+                <h3>Achichuk</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Soleniy</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Morinovka</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Anzur piyoz</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Chakka</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Turp</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+        </div>
+
+        <h2 id="ichimliklar">🥤 Ichimliklar</h2>
+
+        <div class="products">
+
+            <div class="product">
+                <h3>Cola 0.5 L</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Fanta 0.5 L</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Sprite 0.5 L</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Fuse Tea 0.5 L</h3>
+                <p>8 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Cola katta</h3>
+                <p>17 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Fanta katta</h3>
+                <p>17 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Sprite katta</h3>
+                <p>17 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Fuse Tea katta</h3>
+                <p>17 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Mojito</h3>
+                <p>14 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>G'urob 0.25 L</h3>
+                <p>20 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+        </div>
+
+        <h2>🍞 Non</h2>
+
+        <div class="products">
+
+            <div class="product">
+                <h3>Qora uy noni</h3>
+                <p>9 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+        </div>
+
+       <h2 id="muzqaymoq">🍦 Muzqaymoq</h2>
+
+        <div class="products">
+
+            <div class="product">
+                <h3>Quyma muzqaymoq 0.5 kg</h3>
+                <p>25 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+            <div class="product">
+                <h3>Quyma muzqaymoq 1 kg</h3>
+                <p>45 000 so'm</p>
+                <button>Qo'shish</button>
+            </div>
+
+        </div>
+
+    </main>
+
+    </main>
+
+<div id="cart">
+    <div class="cart-box">
+        <button id="closeCart">✕</button>
+
+        <h2>🛒 Sizning savatingiz</h2>
+
+        <div id="cartItems"></div>
+
+        <h3>Jami: <span id="totalPrice">0</span> so'm</h3>
+
+        <button id="orderButton">Buyurtma berish</button>
+    </div>
+</div>
+
+<div id="orderForm">
+    <div class="order-box">
+
+        <button id="closeOrder">✕</button>
+
+        <h2>📦 Buyurtma berish</h2>
+
+        <input type="text" id="customerName" placeholder="Ismingiz">
+
+        <input type="text" id="customerPhone" placeholder="Telefon raqamingiz">
+
+        <input type="text" id="customerAddress" placeholder="Manzilingiz">
+
+        <button id="sendOrder">Buyurtmani yuborish</button>
+
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
