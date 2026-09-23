@@ -141,7 +141,7 @@ sendOrder.addEventListener("click", function() {
         return;
     }
 
-    fetch("http://localhost:3000/order", {
+    fetch("/order", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
