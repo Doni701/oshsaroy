@@ -162,6 +162,7 @@ sendOrder.addEventListener("click", function() {
         console.log(data);
 
         alert("Buyurtmangiz qabul qilindi!");
+        
 
         orderForm.style.display = "none";
     });
