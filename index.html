@@ -3,309 +3,623 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OshSaroy</title>
+    <meta name="description" content="OshSaroy — Samarqandda issiq osh va mazali taomlarga buyurtma bering.">
+    <meta name="theme-color" content="#123d2e">
+    <title>OshSaroy — Samarqand taomlari</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <header>
-    <h1>OshSaroy</h1>
-    <p>Issiq osh va mazali taomlar</p>
+<header>
 
-    <button id="cartButton">
-    🛒 Savat
-    <span id="cartCount">0</span>
-</button>
-</header>
-
-   <nav>
-    <button onclick="goToSection('oshlar')">Oshlar</button>
-    <button onclick="goToSection('salatlar')">Salatlar</button>
-    <button onclick="goToSection('ichimliklar')">Ichimliklar</button>
-    <button onclick="goToSection('muzqaymoq')">Muzqaymoq</button>
-</nav>
-<section id="biz-haqimizda" class="about">
-
-    <div class="about-box">
-
-        <div class="about-text">
-            <h2>Biz haqimizda</h2>
-
-            <p>
-                OshSaroy — Samarqanddagi mazali va issiq taomlar maskani.
-                Biz mehmonlarimizga yangi tayyorlangan osh, salatlar
-                va turli ichimliklarni taklif qilamiz.
-            </p>
-
-            <p>
-                Mazali taom, yaxshi xizmat va samimiy muhit —
-                OshSaroyning asosiy maqsadi.
-            </p>
-        </div>
-
-        <div class="about-info">
-            <h3>📍 Manzil</h3>
-<p><strong>SITORA PALAV — SITORA OSH</strong></p>
-<p>M25F+2FW, Samarqand, Samarqand viloyati, O‘zbekiston</p>
-
-<a href="https://www.google.com/maps/search/?api=1&query=SITORA+PALAV+SITORA+OSH%2C+Samarqand"
-   target="_blank"
-   class="map-link">
-    📍 Google Maps’da ochish
-</a>
-
-
-            <h3>📞 Aloqa</h3>
-            
-            <a href="tel:+998XXXXXXXXX" class="phone">
-    +998 XX XXX XX XX
-</a>
-
-            <div class="social-links">
-    <a href="#" target="_blank">Instagram</a>
-    <a href="#" target="_blank">Telegram</a>
-</div>
-
-
-        </div>
-
+    <div class="header-content">
+        <h1>OshSaroy</h1>
+        <p>Issiq osh va mazali taomlar</p>
     </div>
 
-</section>
-    <main>
+</header>
 
-        <h2 id="oshlar">🍚 Oshlar</h2>
+
+<nav aria-label="Taomlar bo‘limlari">
+
+    <div class="nav-links">
+        <button onclick="goToSection('oshlar')">
+            Oshlar
+        </button>
+
+        <button onclick="goToSection('salatlar')">
+            Salatlar
+        </button>
+
+        <button onclick="goToSection('ichimliklar')">
+            Ichimliklar
+        </button>
+
+        <button onclick="goToSection('muzqaymoq')">
+            Muzqaymoq
+        </button>
+    </div>
+
+    <button id="cartButton" type="button" aria-controls="cart" aria-haspopup="dialog">
+        <span class="cart-button-icon" aria-hidden="true">🛒</span>
+        <span>Savat</span>
+        <span id="cartCount" aria-label="Savatdagi mahsulotlar soni" aria-live="polite">0</span>
+    </button>
+
+</nav>
+
+
+<main>
+    <section class="hero" aria-labelledby="heroTitle">
+        <div class="hero-content">
+            <p class="eyebrow">Samarqand ta’mi — dasturxoningizda</p>
+            <h2 id="heroTitle">Mehr bilan tayyorlangan <span>issiq osh</span></h2>
+            <p>Yangi masalliqlar, an’anaviy ta’m va tez buyurtma — OshSaroyda.</p>
+            <a class="hero-link" href="#oshlar">Menyuni ko‘rish <span aria-hidden="true">↓</span></a>
+            <div class="hero-highlights" aria-label="OshSaroy afzalliklari">
+                <span>✦ Yangi masalliqlar</span>
+                <span>✦ An’anaviy ta’m</span>
+                <span>✦ Tez buyurtma</span>
+            </div>
+        </div>
+        <div class="hero-feature" aria-label="Osh 45 000 so‘mdan">
+            <span class="hero-feature-icon" aria-hidden="true">✦</span>
+            <span><small>Oshlar</small><strong>45 000 <small>so‘mdan</small></strong></span>
+            <span class="hero-feature-arrow" aria-hidden="true">↗</span>
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="about-copy">
+            <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true">✦</span> Biz haqimizda</p>
+            <h2 class="restaurant-name">SITORA PALOV <span>—</span> SITORA OSH</h2>
+            <p>Samarqandning sevimli ta’mlarini mehr bilan tayyorlaymiz. O‘zingizga yoqqan taomni tanlang va buyurtma bering.</p>
+            <div class="about-badge"><span aria-hidden="true">✦</span> Samarqandda mehr bilan tayyorlanadi</div>
+        </div>
+        <div class="about-details">
+            <div class="contact-item">
+                <span class="detail-icon location-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                </span>
+                <div class="contact-copy">
+                    <span class="contact-label">Manzilimiz</span>
+                    <strong>M25F+2FW</strong>
+                    <p>Samarqand, O‘zbekiston</p>
+                </div>
+            </div>
+            <a class="map-link" href="https://www.google.com/maps/search/?api=1&query=SITORA+PALAV+SITORA+OSH%2C+Samarqand" target="_blank" rel="noopener noreferrer">
+                <span class="map-link-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>
+                </span>
+                Google xaritada ochish
+                <span class="map-arrow" aria-hidden="true">→</span>
+            </a>
+            <div class="contact-item phone-item">
+                <span class="detail-icon phone-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M7 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M10 17h4"/></svg>
+                </span>
+                <div class="contact-copy">
+                    <span class="contact-label">Buyurtma va savollar</span>
+                    <strong class="phone-number">+998 XX XXX XX XX</strong>
+                    <p>Telefon raqami yangilanmoqda</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- OSHLAR -->
+
+    <section id="oshlar">
+
+        <h2>🍚 Oshlar</h2>
 
         <div class="products">
 
+
             <div class="product">
-                <img src="images/osh.jpg">
+
+                <img src="images/osh.jpg" alt="Bir kishilik osh">
+
                 <h3>Bir kishilik osh</h3>
+
                 <p>45 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
 
+
             <div class="product">
-                <img src="images/osh.jpg">
+
+                <img src="images/osh.jpg" alt="Ikki kishilik osh">
+
                 <h3>Ikki kishilik osh</h3>
+
                 <p>90 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
+
 
         </div>
 
-        <h2 id="salatlar">🥗 Salatlar</h2>
+    </section>
+
+
+    <!-- SALATLAR -->
+
+    <section id="salatlar">
+
+        <h2>🥗 Salatlar</h2>
 
         <div class="products">
 
-            <div class="product">
-    <img src="images/svejiy.jpg">
-    <h3>Achichuk</h3>
-                <p>8 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
 
             <div class="product">
-                <img src="images/soleniy.jpg">
+
+                <img src="images/svejiy.jpg" alt="Achichuk">
+
+                <h3>Achichuk</h3>
+
+                <p>8 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <img src="images/soleniy.jpg" alt="Soleniy">
+
                 <h3>Soleniy</h3>
+
                 <p>8 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
 
+
             <div class="product">
-                <img src="images/morinovka.jpg">
+
+                <img src="images/morinovka.jpg" alt="Morinovka">
+
                 <h3>Morinovka</h3>
+
                 <p>8 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
 
+
             <div class="product">
-                <img src="images/anzur.jpg">
+
+                <img src="images/anzur.jpg" alt="Anzur piyoz">
+
                 <h3>Anzur piyoz</h3>
+
                 <p>8 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
 
+
             <div class="product">
-                <img src="images/chakka.jpg">
+
+                <img src="images/chakka.jpg" alt="Chakka">
+
                 <h3>Chakka</h3>
+
                 <p>8 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
 
+
             <div class="product">
-                <img src="images/turp.jpg">
+
+                <img src="images/turp.jpg" alt="Turp">
+
                 <h3>Turp</h3>
+
                 <p>8 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
 
-        </div>
-
-        <h2 id="ichimliklar">🥤 Ichimliklar</h2>
-
-        <div class="products">
 
             <div class="product">
-                <h3>Cola 0.5 L</h3>
-                <p>8 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
 
-            <div class="product">
-                <h3>Fanta 0.5 L</h3>
-                <p>8 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
+                <img src="images/qora-non.svg" alt="Qora uy noni">
 
-            <div class="product">
-                <h3>Sprite 0.5 L</h3>
-                <p>8 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
-
-            <div class="product">
-                <h3>Fuse Tea 0.5 L</h3>
-                <p>8 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
-
-            <div class="product">
-                <h3>Cola katta</h3>
-                <p>17 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
-
-            <div class="product">
-                <h3>Fanta katta</h3>
-                <p>17 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
-
-            <div class="product">
-                <h3>Sprite katta</h3>
-                <p>17 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
-
-            <div class="product">
-                <h3>Fuse Tea katta</h3>
-                <p>17 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
-
-            <div class="product">
-                <h3>Mojito</h3>
-                <p>14 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
-
-            <div class="product">
-                <h3>G'urob 0.25 L</h3>
-                <p>20 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
-
-        </div>
-
-        <h2>🍞 Non</h2>
-
-        <div class="products">
-
-            <div class="product">
                 <h3>Qora uy noni</h3>
+
                 <p>9 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
+
 
         </div>
 
-       <h2 id="muzqaymoq">🍦 Muzqaymoq</h2>
+    </section>
+
+
+    <!-- ICHIMLIKLAR -->
+
+    <section id="ichimliklar">
+
+        <h2>🥤 Ichimliklar</h2>
 
         <div class="products">
 
-            <div class="product">
-                <h3>Quyma muzqaymoq 0.5 kg</h3>
-                <p>25 000 so'm</p>
-                <button>Qo'shish</button>
-            </div>
 
             <div class="product">
-                <h3>Quyma muzqaymoq 1 kg</h3>
-                <p>45 000 so'm</p>
-                <button>Qo'shish</button>
+
+                <img src="images/cola.svg" alt="Coca-Cola ichimligi">
+
+                <h3>Cola 0.5 L</h3>
+
+                <p>8 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
             </div>
+
+
+            <div class="product">
+
+                <img src="images/fanta.svg" alt="Fanta ichimligi">
+
+                <h3>Fanta 0.5 L</h3>
+
+                <p>8 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <img src="images/sprite.svg" alt="Sprite ichimligi">
+
+                <h3>Sprite 0.5 L</h3>
+
+                <p>8 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <img src="images/fuse-tea.svg" alt="Fuse Tea ichimligi">
+
+                <h3>Fuse Tea 0.5 L</h3>
+
+                <p>8 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <img src="images/cola.svg" alt="Coca-Cola ichimligi">
+
+                <h3>Cola katta</h3>
+
+                <p>17 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <img src="images/fanta.svg" alt="Fanta ichimligi">
+
+                <h3>Fanta katta</h3>
+
+                <p>17 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <img src="images/sprite.svg" alt="Sprite ichimligi">
+
+                <h3>Sprite katta</h3>
+
+                <p>17 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <img src="images/fuse-tea.svg" alt="Fuse Tea ichimligi">
+
+                <h3>Fuse Tea katta</h3>
+
+                <p>17 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <h3>Mojito</h3>
+
+                <p>14 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <img src="images/gorob.jpg" alt="G‘urob ichimligi">
+
+                <h3>G'urob 0.25 L</h3>
+
+                <p>20 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
 
         </div>
 
-    </main>
+    </section>
 
-    </main>
 
-<div id="cart">
+    <!-- MUZQAYMOQ -->
+
+    <section id="muzqaymoq">
+
+        <h2>🍦 Muzqaymoq</h2>
+
+        <div class="products">
+
+
+            <div class="product">
+
+                <h3>Quyma muzqaymoq 0.5 kg</h3>
+
+                <p>25 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+            <div class="product">
+
+                <h3>Quyma muzqaymoq 1 kg</h3>
+
+                <p>45 000 so'm</p>
+
+                <button>
+                    Savatga qo'shish
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<!-- SAVAT -->
+
+<div id="cart" role="dialog" aria-modal="true" aria-labelledby="cartTitle" aria-hidden="true">
+
     <div class="cart-box">
-        <button id="closeCart">✕</button>
 
-        <h2>🛒 Sizning savatingiz</h2>
+        <button id="closeCart" type="button" aria-label="Savatni yopish">
+            ✕
+        </button>
+
+        <h2 id="cartTitle">🛒 Savat</h2>
 
         <div id="cartItems"></div>
 
-        <h3>Jami: <span id="totalPrice">0</span> so'm</h3>
+        <h3 class="cart-total">
+            Jami:
+            <span id="totalPrice">0</span>
+            so'm
+        </h3>
 
-        <button id="orderButton">Buyurtma berish</button>
-    </div>
-</div>
-
-<div id="orderForm">
-    <div class="order-box">
-
-        <button id="closeOrder">✕</button>
-
-        <h2>📦 Buyurtma berish</h2>
-
-        <input type="text" id="customerName" placeholder="Ismingiz">
-
-        <input type="text" id="customerPhone" placeholder="Telefon raqamingiz">
-
-        <input type="text" id="customerAddress" placeholder="Manzilingiz">
-
-        <button id="sendOrder">Buyurtmani yuborish</button>
+        <button id="orderButton" type="button">
+            Buyurtma berish
+        </button>
 
     </div>
+
 </div>
 
-<script src="script.js"></script>
+
+<!-- BUYURTMA FORMASI -->
+
+<div id="orderForm" role="dialog" aria-modal="true" aria-labelledby="orderTitle" aria-hidden="true">
+
+    <form class="order-box" id="checkoutForm">
+
+        <button id="closeOrder" type="button" aria-label="Buyurtma oynasini yopish">
+            ✕
+        </button>
+
+        <h2 id="orderTitle">📦 Buyurtma berish</h2>
+
+        <input
+            type="text"
+            id="customerName"
+            placeholder="Ismingiz"
+            aria-label="Ismingiz"
+            autocomplete="name"
+            maxlength="80"
+            required
+        >
+
+        <input
+            type="tel"
+            id="customerPhone"
+            placeholder="Telefon raqamingiz"
+            aria-label="Telefon raqamingiz"
+            autocomplete="tel"
+            maxlength="30"
+            required
+        >
+
+        <input
+            type="text"
+            id="customerAddress"
+            placeholder="Manzilingiz"
+            aria-label="Manzilingiz"
+            autocomplete="street-address"
+            maxlength="250"
+            required
+        >
+
+        <p id="orderStatus" role="status" aria-live="polite"></p>
+
+        <button id="sendOrder" type="submit">
+            Buyurtmani yuborish
+        </button>
+
+        <button
+            id="cancelOrder"
+            style="display: none;"
+        >
+            ❌ Buyurtmani bekor qilish
+        </button>
+
+    </form>
+
+</div>
+
 
 <footer>
 
-    <div class="footer-box">
+    <div class="footer-brand">
 
-        <div>
-            <h2>OshSaroy</h2>
-            <p>Issiq osh va mazali taomlar</p>
-        </div>
+        <h3><span class="footer-mark" aria-hidden="true">✦</span> OshSaroy</h3>
 
-        <div>
-            <h3>Bo‘limlar</h3>
-            <a href="#oshlar">Oshlar</a>
-            <a href="#salatlar">Salatlar</a>
-            <a href="#ichimliklar">Ichimliklar</a>
-            <a href="#muzqaymoq">Muzqaymoq</a>
-        </div>
-
-        <div>
-            <h3>Aloqa</h3>
-            <p>📞 Telefon: +998 XX XXX XX XX</p>
-            <p>📍 Samarqand</p>
-        </div>
+        <p>
+            Issiq osh va mazali taomlar
+        </p>
 
     </div>
 
-    <div class="footer-bottom">
-        © 2026 OshSaroy. Barcha huquqlar himoyalangan.
+
+    <div class="footer-menu">
+
+        <h3>Bo'limlar</h3>
+
+        <a href="#oshlar">
+            Oshlar
+        </a>
+
+        <a href="#salatlar">
+            Salatlar
+        </a>
+
+        <a href="#ichimliklar">
+            Ichimliklar
+        </a>
+
+        <a href="#muzqaymoq">
+            Muzqaymoq
+        </a>
+
+    </div>
+
+
+    <div class="footer-contact">
+
+        <h3>Aloqa</h3>
+
+        <p class="footer-phone"><span aria-hidden="true">☎</span><span><small>Buyurtma va savollar</small><strong>+998 XX XXX XX XX</strong></span></p>
+
+        <a
+            href="https://www.google.com/maps/search/?api=1&query=SITORA+PALAV+SITORA+OSH%2C+Samarqand"
+            target="_blank"
+        >
+            📍 Manzilni xaritada ko‘rish <span aria-hidden="true">↗</span>
+        </a>
+
     </div>
 
 </footer>
+
+
+<script src="script.js"></script>
 
 </body>
 </html>
