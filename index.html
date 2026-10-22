@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f6f7fb">
+    <title>Kunlik — Rejalaringiz va maqsadlaringiz</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <a class="brand" href="#" aria-label="Kunlik bosh sahifa">
+                <span class="brand-mark">K</span>
+                <span>kunlik<span class="brand-dot">.</span></span>
+            </a>
+
+            <p class="nav-label">MENING REJALARIM</p>
+            <nav class="navigation" aria-label="Vazifalar filtri">
+                <button class="nav-item active" type="button" data-filter="all">
+                    <span class="nav-icon">▦</span><span>Barcha vazifalar</span><span class="nav-count" id="all-count">0</span>
+                </button>
+                <button class="nav-item" type="button" data-filter="today">
+                    <span class="nav-icon">◷</span><span>Bugun</span><span class="nav-count" id="today-count">0</span>
+                </button>
+                <button class="nav-item" type="button" data-filter="active">
+                    <span class="nav-icon">◌</span><span>Jarayonda</span><span class="nav-count" id="active-count">0</span>
+                </button>
+                <button class="nav-item" type="button" data-filter="completed">
+                    <span class="nav-icon">✓</span><span>Bajarilgan</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="streak-card">
+                    <div class="streak-icon">✦</div>
+                    <p class="streak-title">Ajoyib davom etyapsiz!</p>
+                    <p class="streak-copy">Bugun kichik qadam — ertaga katta natija.</p>
+                    <div class="streak-row"><span>🔥 Faollik seriyasi</span><strong id="streak-count">0 kun</strong></div>
+                </div>
+                <p class="sidebar-note">Har bir bajarilgan vazifa — maqsadingizga bir qadam yaqin.</p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <div>
+                    <p class="eyebrow" id="today-label">BUGUN</p>
+                    <p class="topbar-date" id="full-date"></p>
+                </div>
+                <div class="coin-pill" aria-label="Yig‘ilgan tangalar">
+                    <span class="coin-icon">✦</span>
+                    <span id="coin-count">0</span>
+                    <span class="coin-label">tanga</span>
+                </div>
+            </header>
+
+            <section class="welcome">
+                <div>
+                    <p class="eyebrow">KUNLIK REJALARINGIZ</p>
+                    <h1 id="welcome-title">Bugun nimaga erishamiz?</h1>
+                    <p class="welcome-copy">Rejangizni tuzing, vazifalarni bajaring va har bir qadam uchun tanga to‘plang.</p>
+                </div>
+                <div class="welcome-decoration" aria-hidden="true"><span>✦</span><span>✧</span><span>·</span></div>
+            </section>
+
+            <section class="stats-grid" aria-label="Umumiy ko‘rsatkichlar">
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-violet">▦</span>
+                    <p class="stat-label">Jami vazifalar</p>
+                    <p class="stat-value" id="stat-total">0</p>
+                    <p class="stat-hint">Barcha rejalaringiz</p>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-green">✓</span>
+                    <p class="stat-label">Bajarildi</p>
+                    <p class="stat-value" id="stat-completed">0</p>
+                    <p class="stat-hint" id="completed-hint">Hali boshlashga ulguramiz</p>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-orange">◷</span>
+                    <p class="stat-label">Kutilmoqda</p>
+                    <p class="stat-value" id="stat-pending">0</p>
+                    <p class="stat-hint">Keyingi qadamingiz</p>
+                </article>
+                <article class="stat-card">
+                    <span class="stat-icon stat-icon-yellow">✦</span>
+                    <p class="stat-label">Yig‘ilgan tanga</p>
+                    <p class="stat-value" id="stat-coins">0</p>
+                    <p class="stat-hint">Har vazifa uchun mukofot</p>
+                </article>
+            </section>
+
+            <section class="content-grid">
+                <div class="tasks-column">
+                    <section class="panel add-panel">
+                        <div class="section-heading">
+                            <div>
+                                <h2>Yangi vazifa</h2>
+                                <p>Rejangizni yozing va unga vaqt ajrating.</p>
+                            </div>
+                            <span class="heading-sparkle">✳</span>
+                        </div>
+                        <form class="task-form" id="task-form">
+                            <label class="sr-only" for="task-title">Vazifa nomi</label>
+                            <input id="task-title" name="title" type="text" maxlength="100" placeholder="Masalan: 20 daqiqa kitob o‘qish..." required>
+                            <div class="form-options">
+                                <label class="select-wrap">
+                                    <span class="sr-only">Vazifa kategoriyasi</span>
+                                    <select id="task-category" name="category">
+                                        <option value="Shaxsiy">✦ Shaxsiy</option>
+                                        <option value="O‘qish">▤ O‘qish</option>
+                                        <option value="Ish">▣ Ish</option>
+                                        <option value="Salomatlik">♡ Salomatlik</option>
+                                    </select>
+                                </label>
+                                <label class="select-wrap">
+                                    <span class="sr-only">Vazifa muhimligi</span>
+                                    <select id="task-priority" name="priority">
+                                        <option value="low">Oson · 5 tanga</option>
+                                        <option value="medium" selected>O‘rtacha · 10 tanga</option>
+                                        <option value="high">Muhim · 15 tanga</option>
+                                    </select>
+                                </label>
+                                <label class="date-wrap">
+                                    <span class="sr-only">Bajarish sanasi</span>
+                                    <input id="task-date" name="dueDate" type="date">
+                                </label>
+                                <button class="primary-button" type="submit"><span>＋</span> Vazifa qo‘shish</button>
+                            </div>
+                        </form>
+                    </section>
+
+                    <section class="task-section">
+                        <div class="task-heading">
+                            <div>
+                                <h2 id="list-title">Barcha vazifalar</h2>
+                                <p id="list-subtitle">Maqsadlaringiz sari izchil qadamlar</p>
+                            </div>
+                            <label class="search-box">
+                                <span aria-hidden="true">⌕</span>
+                                <span class="sr-only">Vazifalardan qidirish</span>
+                                <input id="task-search" type="search" placeholder="Qidirish">
+                            </label>
+                        </div>
+                        <div class="task-list" id="task-list" aria-live="polite"></div>
+                    </section>
+                </div>
+
+                <aside class="right-column">
+                    <section class="panel goal-panel">
+                        <div class="section-heading">
+                            <div><h2>Bugungi maqsad</h2><p>Har kuni oz-ozdan oldinga</p></div>
+                            <span class="goal-icon">◎</span>
+                        </div>
+                        <div class="goal-progress-row">
+                            <div><strong id="goal-progress-text">0 / 3</strong><span> vazifa bajarildi</span></div>
+                            <span class="goal-emoji">🎯</span>
+                        </div>
+                        <div class="progress-track"><span id="goal-progress-bar"></span></div>
+                        <p class="goal-footer" id="goal-footer">Uchta vazifani bajaring — bugungi maqsadga yeting!</p>
+                    </section>
+
+                    <section class="panel week-panel">
+                        <div class="section-heading">
+                            <div><h2>Haftalik faollik</h2><p>Bajarilgan vazifalar</p></div>
+                            <span class="week-icon">⌁</span>
+                        </div>
+                        <div class="week-chart" id="week-chart" aria-label="So‘nggi yetti kun faolligi"></div>
+                    </section>
+
+                    <section class="reward-card">
+                        <div class="reward-top"><span class="reward-icon">✦</span><span class="reward-tag">MUKOFOT</span></div>
+                        <h2>Harakatlaringiz<br>qadrlanadi!</h2>
+                        <p>Vazifalarni bajaring va o‘zingizga yoqimli mukofot uchun tanga yig‘ing.</p>
+                        <div class="reward-bottom"><span>Keyingi qadam</span><span>→</span></div>
+                    </section>
+                </aside>
+            </section>
+            <footer class="footer-note">Kichik qadamlar katta natijalarga olib boradi <span>✦</span></footer>
+        </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="script.js"></script>
+</body>
+</html>
