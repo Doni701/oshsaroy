@@ -11,17 +11,118 @@
 
 <body>
 
-<header>
+<div class="announcement-bar">
+    <span class="announcement-dot" aria-hidden="true"></span>
+    <span>Samarqandda har kuni yangi tayyorlangan osh</span>
+    <span class="announcement-divider" aria-hidden="true"></span>
+    <span class="announcement-note">Buyurtmalar: 11:00 — 22:00</span>
+</div>
+
+<div id="signupDialog" role="dialog" aria-modal="true" aria-labelledby="signupTitle" aria-hidden="true">
+    <form class="signup-box" id="signupForm">
+        <p class="signup-eyebrow">OshSaroyga xush kelibsiz</p>
+        <h2 id="signupTitle">Akkaunt yarating</h2>
+        <p class="signup-description">Buyurtmalaringizni kuzatish va profilni boshqarish uchun akkaunt yarating.</p>
+
+        <label for="signupName">Ism-familiya</label>
+        <input
+            type="text"
+            id="signupName"
+            name="name"
+            placeholder="Ism-familiyangiz"
+            autocomplete="name"
+            maxlength="80"
+            required
+        >
+
+        <label for="signupPhone">Telefon raqami</label>
+        <input
+            type="tel"
+            id="signupPhone"
+            name="phone"
+            placeholder="+998 90 123 45 67"
+            autocomplete="tel"
+            maxlength="30"
+            required
+        >
+
+        <label for="signupPassword">Parol</label>
+        <input
+            type="password"
+            id="signupPassword"
+            name="password"
+            placeholder="Kamida 10 ta belgi"
+            autocomplete="new-password"
+            minlength="10"
+            maxlength="128"
+            required
+        >
+
+        <p id="signupStatus" role="status" aria-live="polite"></p>
+        <button id="signupSubmit" type="submit">Ro‘yxatdan o‘tish</button>
+        <p class="auth-switch">Akkauntingiz bormi? <button id="showLogin" type="button">Kirish</button></p>
+    </form>
+
+    <form class="signup-box" id="loginForm" hidden>
+        <p class="signup-eyebrow">OshSaroy akkaunti</p>
+        <h2>Kirish</h2>
+        <p class="signup-description">Buyurtma berish va profilingizga kirish uchun akkauntingizga kiring.</p>
+
+        <label for="loginPhone">Telefon raqami</label>
+        <input type="tel" id="loginPhone" name="phone" placeholder="+998 90 123 45 67" autocomplete="username" maxlength="30" required>
+
+        <label for="loginPassword">Parol</label>
+        <input type="password" id="loginPassword" name="password" placeholder="Parolingiz" autocomplete="current-password" maxlength="128" required>
+
+        <p id="loginStatus" role="status" aria-live="polite"></p>
+        <button id="loginSubmit" type="submit">Kirish</button>
+        <p class="auth-switch">Akkauntingiz yo‘qmi? <button id="showSignup" type="button">Ro‘yxatdan o‘tish</button></p>
+    </form>
+</div>
+
+<div id="accountDialog" role="dialog" aria-modal="true" aria-labelledby="accountTitle" aria-hidden="true">
+    <section class="account-box">
+        <button id="closeAccount" type="button" aria-label="Akkaunt oynasini yopish">✕</button>
+        <p class="signup-eyebrow">Shaxsiy kabinet</p>
+        <h2 id="accountTitle">Akkauntim</h2>
+        <div class="account-profile">
+            <strong id="accountName"></strong>
+            <span id="accountPhone"></span>
+        </div>
+        <section class="payment-methods" aria-labelledby="paymentMethodsTitle">
+            <div>
+                <h3 id="paymentMethodsTitle">To‘lov usullari</h3>
+                <p id="paymentMethodsStatus">Kartalaringiz hali ulanmagan.</p>
+            </div>
+            <div id="savedCards"></div>
+            <button id="addCardButton" type="button" disabled>＋ Karta qo‘shish</button>
+            <p class="payment-security">Karta raqami va CVV bu saytda saqlanmaydi. Xavfsiz ulash Click tasdiqlagan tizim orqali amalga oshiriladi.</p>
+        </section>
+        <p id="accountStatus" role="status" aria-live="polite"></p>
+        <button id="logoutButton" type="button">Akkauntdan chiqish</button>
+    </section>
+</div>
+
+<header id="top">
 
     <div class="header-content">
-        <h1>OshSaroy</h1>
-        <p>Issiq osh va mazali taomlar</p>
+        <a class="brand-link" href="#top" aria-label="OshSaroy bosh sahifasi">
+            <span class="brand-emblem" aria-hidden="true">O</span>
+            <span class="brand-copy">
+                <h1>OshSaroy</h1>
+                <p>SAMARQAND · SITORA PALOV</p>
+            </span>
+        </a>
     </div>
+    <button id="accountButton" type="button" aria-controls="accountDialog" aria-haspopup="dialog" hidden>
+        <span aria-hidden="true">♙</span> <span id="accountButtonLabel">Akkaunt</span>
+    </button>
 
 </header>
 
 
 <nav aria-label="Taomlar bo‘limlari">
+    <span class="nav-caption">Menyu</span>
 
     <div class="nav-links">
         <button onclick="goToSection('oshlar')">
@@ -53,29 +154,46 @@
 <main>
     <section class="hero" aria-labelledby="heroTitle">
         <div class="hero-content">
-            <p class="eyebrow">Samarqand ta’mi — dasturxoningizda</p>
-            <h2 id="heroTitle">Mehr bilan tayyorlangan <span>issiq osh</span></h2>
-            <p>Yangi masalliqlar, an’anaviy ta’m va tez buyurtma — OshSaroyda.</p>
-            <a class="hero-link" href="#oshlar">Menyuni ko‘rish <span aria-hidden="true">↓</span></a>
+            <p class="eyebrow"><span aria-hidden="true">✦</span> Samarqandning asl ta’mi</p>
+            <h2 id="heroTitle">Dasturxoningizga <span>mehr bilan</span></h2>
+            <p>Har donasida an’ana, har luqmasida uy ta’mi. Sitora palovini endi bir necha bosishda buyurtma qiling.</p>
+            <a class="hero-link" href="#oshlar">Menyuni kashf eting <span aria-hidden="true">↗</span></a>
             <div class="hero-highlights" aria-label="OshSaroy afzalliklari">
-                <span>✦ Yangi masalliqlar</span>
-                <span>✦ An’anaviy ta’m</span>
-                <span>✦ Tez buyurtma</span>
+                <span><i aria-hidden="true">✓</i> Har kuni yangi</span>
+                <span><i aria-hidden="true">✓</i> O‘z retseptimiz</span>
+                <span><i aria-hidden="true">✓</i> Mehr bilan</span>
             </div>
         </div>
         <div class="hero-feature" aria-label="Osh 45 000 so‘mdan">
             <span class="hero-feature-icon" aria-hidden="true">✦</span>
-            <span><small>Oshlar</small><strong>45 000 <small>so‘mdan</small></strong></span>
+            <span><small>KO‘P SEVILGAN</small><strong>Sitora palovi</strong><small>45 000 so‘mdan</small></span>
             <span class="hero-feature-arrow" aria-hidden="true">↗</span>
+        </div>
+    </section>
+
+    <section class="service-strip" aria-label="Xizmat afzalliklari">
+        <div class="service-item">
+            <span class="service-icon" aria-hidden="true">✳</span>
+            <span><strong>Yangi masalliqlar</strong><small>Har kuni saralab olinadi</small></span>
+        </div>
+        <span class="service-separator" aria-hidden="true"></span>
+        <div class="service-item">
+            <span class="service-icon" aria-hidden="true">⌂</span>
+            <span><strong>Samarqand an’anasi</strong><small>O‘ziga xos Sitora retsepti</small></span>
+        </div>
+        <span class="service-separator" aria-hidden="true"></span>
+        <div class="service-item">
+            <span class="service-icon" aria-hidden="true">♡</span>
+            <span><strong>Mehr bilan tayyorlanadi</strong><small>Dasturxoningizga iliqlik</small></span>
         </div>
     </section>
 
     <section class="about">
         <div class="about-copy">
-            <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true">✦</span> Biz haqimizda</p>
-            <h2 class="restaurant-name">SITORA PALOV <span>—</span> SITORA OSH</h2>
-            <p>Samarqandning sevimli ta’mlarini mehr bilan tayyorlaymiz. O‘zingizga yoqqan taomni tanlang va buyurtma bering.</p>
-            <div class="about-badge"><span aria-hidden="true">✦</span> Samarqandda mehr bilan tayyorlanadi</div>
+            <p class="eyebrow"><span class="eyebrow-mark" aria-hidden="true">✦</span> Bizning hikoyamiz</p>
+            <h2 class="restaurant-name">Samarqand ta’mi,<br><span>o‘z uyidek yaqin.</span></h2>
+            <p>Sitora palov — shoshilmay damlangan osh, saralangan masalliqlar va avloddan avlodga o‘tgan mehmondo‘stlik. Sevimli taomingizni tanlang, qolganini bizga qo‘ying.</p>
+            <div class="about-badge"><span aria-hidden="true">✦</span> Samarqandda, mehr bilan</div>
         </div>
         <div class="about-details">
             <div class="contact-item">
@@ -108,12 +226,29 @@
         </div>
     </section>
 
+    <section class="menu-intro" aria-labelledby="menuTitle">
+        <div class="menu-intro-copy">
+            <p class="eyebrow">OshSaroy menyusi</p>
+            <h2 id="menuTitle">Ko‘nglingiz tusaganini <span>tanlang.</span></h2>
+            <p>Har bir taom — o‘z vaqtida, o‘z ta’mida.</p>
+        </div>
+        <label class="menu-search">
+            <span class="search-icon" aria-hidden="true">⌕</span>
+            <input id="menuSearch" type="search" placeholder="Taom qidirish..." autocomplete="off">
+            <kbd>/</kbd>
+        </label>
+        <p id="searchStatus" class="search-status" role="status" aria-live="polite"></p>
+    </section>
+
 
     <!-- OSHLAR -->
 
-    <section id="oshlar">
+    <section class="menu-section" id="oshlar">
 
-        <h2>🍚 Oshlar</h2>
+            <div class="section-heading">
+                <div><p class="eyebrow">Dasturxonimizdan</p><h2><span class="section-icon" aria-hidden="true">01</span> Oshlar</h2></div>
+                <p class="section-note">Sekin damlangan, an’ana bilan tortilgan.</p>
+            </div>
 
         <div class="products">
 
@@ -155,9 +290,12 @@
 
     <!-- SALATLAR -->
 
-    <section id="salatlar">
+    <section class="menu-section" id="salatlar">
 
-        <h2>🥗 Salatlar</h2>
+            <div class="section-heading">
+                <div><p class="eyebrow">Yengil va barra</p><h2><span class="section-icon" aria-hidden="true">02</span> Salatlar</h2></div>
+                <p class="section-note">Har luqmaga yangilik qo‘shadi.</p>
+            </div>
 
         <div class="products">
 
@@ -254,7 +392,7 @@
 
             <div class="product">
 
-                <img src="images/qora-non.svg" alt="Qora uy noni">
+                <img src="images/qora-uy-noni.png" alt="Savatdagi Samarqand qora uy nonlari">
 
                 <h3>Qora uy noni</h3>
 
@@ -274,16 +412,19 @@
 
     <!-- ICHIMLIKLAR -->
 
-    <section id="ichimliklar">
+    <section class="menu-section" id="ichimliklar">
 
-        <h2>🥤 Ichimliklar</h2>
+            <div class="section-heading">
+                <div><p class="eyebrow">Chanqoqbosdi</p><h2><span class="section-icon" aria-hidden="true">03</span> Ichimliklar</h2></div>
+                <p class="section-note">Taomingizga mos, sovuq va yoqimli.</p>
+            </div>
 
         <div class="products">
 
 
             <div class="product">
 
-                <img src="images/cola.svg" alt="Coca-Cola ichimligi">
+                <img src="images/drink-cola.png" alt="Coca-Cola ichimligi">
 
                 <h3>Cola 0.5 L</h3>
 
@@ -298,7 +439,7 @@
 
             <div class="product">
 
-                <img src="images/fanta.svg" alt="Fanta ichimligi">
+                <img src="images/drink-fanta.png" alt="Fanta ichimligi">
 
                 <h3>Fanta 0.5 L</h3>
 
@@ -313,7 +454,7 @@
 
             <div class="product">
 
-                <img src="images/sprite.svg" alt="Sprite ichimligi">
+                <img src="images/drink-sprite.png" alt="Sprite ichimligi">
 
                 <h3>Sprite 0.5 L</h3>
 
@@ -328,7 +469,7 @@
 
             <div class="product">
 
-                <img src="images/fuse-tea.svg" alt="Fuse Tea ichimligi">
+                <img src="images/drink-fuse-tea.png" alt="Fuse Tea ichimligi">
 
                 <h3>Fuse Tea 0.5 L</h3>
 
@@ -343,7 +484,7 @@
 
             <div class="product">
 
-                <img src="images/cola.svg" alt="Coca-Cola ichimligi">
+                <img src="images/drink-cola.png" alt="Coca-Cola ichimligi">
 
                 <h3>Cola katta</h3>
 
@@ -358,7 +499,7 @@
 
             <div class="product">
 
-                <img src="images/fanta.svg" alt="Fanta ichimligi">
+                <img src="images/drink-fanta.png" alt="Fanta ichimligi">
 
                 <h3>Fanta katta</h3>
 
@@ -373,7 +514,7 @@
 
             <div class="product">
 
-                <img src="images/sprite.svg" alt="Sprite ichimligi">
+                <img src="images/drink-sprite.png" alt="Sprite ichimligi">
 
                 <h3>Sprite katta</h3>
 
@@ -388,7 +529,7 @@
 
             <div class="product">
 
-                <img src="images/fuse-tea.svg" alt="Fuse Tea ichimligi">
+                <img src="images/drink-fuse-tea.png" alt="Fuse Tea ichimligi">
 
                 <h3>Fuse Tea katta</h3>
 
@@ -402,6 +543,8 @@
 
 
             <div class="product">
+
+                <img src="images/drink-mojito.png" alt="Moxito ichimligi">
 
                 <h3>Mojito</h3>
 
@@ -436,14 +579,19 @@
 
     <!-- MUZQAYMOQ -->
 
-    <section id="muzqaymoq">
+    <section class="menu-section" id="muzqaymoq">
 
-        <h2>🍦 Muzqaymoq</h2>
+            <div class="section-heading">
+                <div><p class="eyebrow">Shirin yakun</p><h2><span class="section-icon" aria-hidden="true">04</span> Muzqaymoq</h2></div>
+                <p class="section-note">Dasturxonning eng shirin lahzasi.</p>
+            </div>
 
         <div class="products">
 
 
             <div class="product">
+
+                <img src="images/muzqaymoq.png" alt="Meva va shokolad bilan bezatilgan quyma muzqaymoq">
 
                 <h3>Quyma muzqaymoq 0.5 kg</h3>
 
@@ -457,6 +605,8 @@
 
 
             <div class="product">
+
+                <img src="images/muzqaymoq.png" alt="Meva va shokolad bilan bezatilgan quyma muzqaymoq">
 
                 <h3>Quyma muzqaymoq 1 kg</h3>
 
@@ -486,7 +636,8 @@
             ✕
         </button>
 
-        <h2 id="cartTitle">🛒 Savat</h2>
+        <p class="eyebrow">Buyurtmangiz</p>
+        <h2 id="cartTitle">Savat</h2>
 
         <div id="cartItems"></div>
 
@@ -515,7 +666,8 @@
             ✕
         </button>
 
-        <h2 id="orderTitle">📦 Buyurtma berish</h2>
+        <p class="eyebrow">So‘nggi qadam</p>
+        <h2 id="orderTitle">Buyurtmani rasmiylashtirish</h2>
 
         <input
             type="text"
@@ -524,6 +676,7 @@
             aria-label="Ismingiz"
             autocomplete="name"
             maxlength="80"
+            readonly
             required
         >
 
@@ -534,6 +687,7 @@
             aria-label="Telefon raqamingiz"
             autocomplete="tel"
             maxlength="30"
+            readonly
             required
         >
 
@@ -550,7 +704,7 @@
         <p id="orderStatus" role="status" aria-live="polite"></p>
 
         <button id="sendOrder" type="submit">
-            Buyurtmani yuborish
+            Buyurtmani tasdiqlash <span aria-hidden="true">→</span>
         </button>
 
         <button
@@ -569,14 +723,13 @@
 
     <div class="footer-brand">
 
-        <h3><span class="footer-mark" aria-hidden="true">✦</span> OshSaroy</h3>
+        <h3><span class="footer-mark" aria-hidden="true">O</span> OshSaroy</h3>
 
         <p>
             Issiq osh va mazali taomlar
         </p>
 
     </div>
-
 
     <div class="footer-menu">
 
@@ -615,6 +768,8 @@
         </a>
 
     </div>
+
+    <p class="footer-note">© 2026 OshSaroy. Samarqandda mehr bilan.</p>
 
 </footer>
 

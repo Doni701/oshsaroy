@@ -12,9 +12,33 @@ const checkoutForm = document.querySelector("#checkoutForm");
 const closeOrderButton = document.querySelector("#closeOrder");
 const orderStatus = document.querySelector("#orderStatus");
 const sendOrderButton = document.querySelector("#sendOrder");
+const signupDialog = document.querySelector("#signupDialog");
+const signupForm = document.querySelector("#signupForm");
+const signupName = document.querySelector("#signupName");
+const signupPhone = document.querySelector("#signupPhone");
+const signupPassword = document.querySelector("#signupPassword");
+const signupStatus = document.querySelector("#signupStatus");
+const signupSubmitButton = document.querySelector("#signupSubmit");
+const loginForm = document.querySelector("#loginForm");
+const loginPhone = document.querySelector("#loginPhone");
+const loginPassword = document.querySelector("#loginPassword");
+const loginStatus = document.querySelector("#loginStatus");
+const loginSubmitButton = document.querySelector("#loginSubmit");
+const accountButton = document.querySelector("#accountButton");
+const accountDialog = document.querySelector("#accountDialog");
+const accountName = document.querySelector("#accountName");
+const accountPhone = document.querySelector("#accountPhone");
+const accountStatus = document.querySelector("#accountStatus");
+const paymentMethodsStatus = document.querySelector("#paymentMethodsStatus");
+const addCardButton = document.querySelector("#addCardButton");
+const logoutButton = document.querySelector("#logoutButton");
+const menuSearch = document.querySelector("#menuSearch");
+const searchStatus = document.querySelector("#searchStatus");
+const gatedElements = document.querySelectorAll("body > header, body > nav, body > main, body > #cart, body > #orderForm, body > #accountDialog, body > footer");
 const moneyFormat = new Intl.NumberFormat("uz-UZ");
 let activeDialog = null;
 let previousFocus = null;
+let currentUser = null;
 
 function formatPrice(amount) {
     return moneyFormat.format(amount);
@@ -113,6 +137,7 @@ function openDialog(dialog) {
 
 function closeDialog(dialog) {
     if (!dialog || !dialog.classList.contains("is-open")) return;
+    if (dialog === signupDialog && !currentUser) return;
 
     dialog.classList.remove("is-open");
     dialog.setAttribute("aria-hidden", "true");
@@ -123,6 +148,196 @@ function closeDialog(dialog) {
         previousFocus.focus();
     }
 }
+
+function setPageAccess(isRegistered) {
+    gatedElements.forEach(function(element) {
+        element.inert = !isRegistered;
+    });
+}
+
+function applyCustomerProfile(profile) {
+    document.querySelector("#customerName").value = profile.name;
+    document.querySelector("#customerPhone").value = profile.phone;
+}
+
+function setAuthenticatedUser(user) {
+    currentUser = user;
+    setPageAccess(true);
+    applyCustomerProfile(user);
+    accountName.textContent = user.name;
+    accountPhone.textContent = user.phone;
+    accountButton.querySelector("#accountButtonLabel").textContent = user.name;
+    accountButton.hidden = false;
+}
+
+function showAuthMode(mode) {
+    const isLogin = mode === "login";
+    signupForm.hidden = isLogin;
+    loginForm.hidden = !isLogin;
+    signupStatus.textContent = "";
+    loginStatus.textContent = "";
+    const firstInput = isLogin ? loginPhone : signupName;
+    if (activeDialog === signupDialog) firstInput.focus();
+}
+
+function authConnectionError(error) {
+    if (error instanceof TypeError || /failed to fetch|networkerror/i.test(error.message || "")) {
+        return "Akkaunt serveriga ulanib bo‘lmadi. Terminalda `npm start` ni ishga tushiring va saytni server konsolida ko‘rsatilgan http://localhost manzilidan oching.";
+    }
+    return error.message || "Server bilan bog‘lanib bo‘lmadi. Qayta urinib ko‘ring.";
+}
+
+async function readAuthResponse(response) {
+    const responseText = await response.text();
+    try {
+        return JSON.parse(responseText);
+    } catch {
+        throw new Error("Akkaunt serverining javobi noto‘g‘ri. Terminalda `npm start` ni ishga tushiring va saytni server konsolida ko‘rsatilgan http://localhost manzilidan oching.");
+    }
+}
+
+async function sendAuthRequest(form, endpoint, statusElement, submitButton) {
+    if (!form.reportValidity()) return;
+    statusElement.textContent = "";
+    submitButton.disabled = true;
+    const originalText = submitButton.textContent;
+    submitButton.textContent = "Tekshirilmoqda…";
+
+    try {
+        const formData = new FormData(form);
+        const response = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(Object.fromEntries(formData))
+        });
+        const result = await readAuthResponse(response);
+        if (!response.ok) throw new Error(result.error || "So‘rov bajarilmadi.");
+
+        setAuthenticatedUser(result.user);
+        closeDialog(signupDialog);
+        signupForm.reset();
+        loginForm.reset();
+    } catch (error) {
+        statusElement.textContent = authConnectionError(error);
+    } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = originalText;
+    }
+}
+
+signupForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    sendAuthRequest(signupForm, "/api/auth/register", signupStatus, signupSubmitButton);
+});
+
+loginForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    sendAuthRequest(loginForm, "/api/auth/login", loginStatus, loginSubmitButton);
+});
+
+document.querySelector("#showLogin").addEventListener("click", function() {
+    showAuthMode("login");
+});
+
+document.querySelector("#showSignup").addEventListener("click", function() {
+    showAuthMode("signup");
+});
+
+menuSearch.addEventListener("input", function() {
+    const query = menuSearch.value.trim().toLocaleLowerCase("uz-UZ");
+    let matches = 0;
+
+    productCards.forEach(function(product) {
+        const isMatch = product.textContent.toLocaleLowerCase("uz-UZ").includes(query);
+        product.hidden = !isMatch;
+        if (isMatch) matches += 1;
+    });
+
+    document.querySelectorAll(".menu-section").forEach(function(section) {
+        const hasProducts = section.querySelector(".product:not([hidden])");
+        section.hidden = !hasProducts;
+    });
+
+    searchStatus.textContent = query
+        ? (matches ? matches + " ta taom topildi" : "Bu nomda taom topilmadi")
+        : "";
+});
+
+menuSearch.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+        menuSearch.value = "";
+        menuSearch.dispatchEvent(new Event("input", { bubbles: true }));
+        menuSearch.blur();
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.key === "/" && !event.altKey && !event.ctrlKey && !event.metaKey &&
+        !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) {
+        event.preventDefault();
+        menuSearch.focus();
+    }
+});
+
+document.querySelector("#closeAccount").addEventListener("click", function() {
+    closeDialog(accountDialog);
+});
+
+accountButton.addEventListener("click", function() {
+    accountStatus.textContent = "";
+    openDialog(accountDialog);
+    fetch("/api/payment-methods")
+        .then(async function(response) {
+            const result = await response.json();
+            if (!response.ok) throw new Error(result.error || "To‘lov usullari yuklanmadi.");
+            paymentMethodsStatus.textContent = result.message;
+            addCardButton.disabled = !result.available;
+            if (!result.available) addCardButton.textContent = "Karta ulash uchun Click merchant kerak";
+        })
+        .catch(function(error) {
+            paymentMethodsStatus.textContent = error.message || "To‘lov usullari yuklanmadi.";
+            addCardButton.disabled = true;
+        });
+});
+
+addCardButton.addEventListener("click", async function() {
+    accountStatus.textContent = "";
+    addCardButton.disabled = true;
+    try {
+        const response = await fetch("/api/payment-methods", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: "{}"
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Karta ulanmadi.");
+        accountStatus.textContent = result.message || "Karta ulandi.";
+    } catch (error) {
+        accountStatus.textContent = error.message || "Karta ulanmadi.";
+    } finally {
+        addCardButton.disabled = false;
+    }
+});
+
+logoutButton.addEventListener("click", async function() {
+    logoutButton.disabled = true;
+    accountStatus.textContent = "";
+    try {
+        const response = await fetch("/api/auth/logout", { method: "POST" });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Akkauntdan chiqib bo‘lmadi.");
+        closeDialog(accountDialog);
+        currentUser = null;
+        accountButton.hidden = true;
+        setPageAccess(false);
+        showAuthMode("signup");
+        openDialog(signupDialog);
+    } catch (error) {
+        accountStatus.textContent = error.message || "Akkauntdan chiqib bo‘lmadi.";
+    } finally {
+        logoutButton.disabled = false;
+    }
+});
 
 productCards.forEach(function(product) {
     const button = product.querySelector("button");
@@ -170,14 +385,14 @@ orderButton.addEventListener("click", function() {
     openDialog(orderDialog);
 });
 
-document.querySelectorAll("#cart, #orderForm").forEach(function(dialog) {
+document.querySelectorAll("#signupDialog, #accountDialog, #cart, #orderForm").forEach(function(dialog) {
     dialog.addEventListener("click", function(event) {
-        if (event.target === dialog) closeDialog(dialog);
+        if (event.target === dialog && dialog !== signupDialog) closeDialog(dialog);
     });
 });
 
 document.addEventListener("keydown", function(event) {
-    if (event.key === "Escape" && activeDialog) {
+    if (event.key === "Escape" && activeDialog && activeDialog !== signupDialog) {
         closeDialog(activeDialog);
     }
 });
@@ -187,8 +402,6 @@ checkoutForm.addEventListener("submit", async function(event) {
     if (!checkoutForm.reportValidity() || cart.length === 0) return;
 
     const customer = {
-        name: document.querySelector("#customerName").value.trim(),
-        phone: document.querySelector("#customerPhone").value.trim(),
         address: document.querySelector("#customerAddress").value.trim()
     };
 
@@ -197,13 +410,7 @@ checkoutForm.addEventListener("submit", async function(event) {
     orderStatus.textContent = "";
 
     try {
-        const isLocalPreview = window.location.protocol === "file:" ||
-            window.location.hostname === "localhost" ||
-            window.location.hostname === "127.0.0.1";
-        const orderEndpoint = isLocalPreview
-            ? "http://" + (window.location.hostname === "127.0.0.1" ? "127.0.0.1" : "localhost") + ":3000/order"
-            : "/order";
-        const response = await fetch(orderEndpoint, {
+        const response = await fetch("/order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -236,6 +443,7 @@ checkoutForm.addEventListener("submit", async function(event) {
 
         closeDialog(orderDialog);
         checkoutForm.reset();
+        if (currentUser) applyCustomerProfile(currentUser);
         cart.splice(0, cart.length);
         updateCart();
         window.alert(result.message || "Buyurtmangiz qabul qilindi!");
@@ -254,3 +462,21 @@ function goToSection(sectionId) {
 
 window.goToSection = goToSection;
 updateCart();
+
+async function initializeAuth() {
+    setPageAccess(false);
+    showAuthMode("signup");
+    openDialog(signupDialog);
+    try {
+        const response = await fetch("/api/auth/me");
+        const result = await readAuthResponse(response);
+        if (!response.ok) throw new Error(result.error || "Akkauntni tekshirib bo‘lmadi.");
+        if (!result.user) return;
+        setAuthenticatedUser(result.user);
+        closeDialog(signupDialog);
+    } catch (error) {
+        signupStatus.textContent = authConnectionError(error);
+    }
+}
+
+initializeAuth();
