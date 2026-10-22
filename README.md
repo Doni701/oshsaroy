@@ -20,9 +20,9 @@ Render’da sozlash:
 4. Saqlab, Web Service’ni redeploy qiling. Deploy jurnallarida `Akkauntlar bazasini ishga tushirib bo‘lmadi` xatosi yo‘qligini tekshiring.
 5. Saytda yangi akkaunt yarating. SQLite’dagi lokal akkauntlar PostgreSQL’ga avtomatik ko‘chmaydi; lokal va Render bazalarida foydalanuvchi ma’lumotlari alohida saqlanadi.
 
-`DATABASE_URL` sozlangach, Render PostgreSQL’da yaratilgan yangi akkauntlar va sessiyalar deploy yoki restartdan keyin ham saqlanadi. Parollar scrypt bilan xeshlanadi, sessiya HttpOnly cookie’da saqlanadi. Telefon raqami akkauntga kirish uchun ishlatiladi.
+`DATABASE_URL` sozlangach, Render PostgreSQL’da yaratilgan yangi akkauntlar va sessiyalar deploy yoki restartdan keyin ham saqlanadi. Akkaunt yaratish uchun ism, telefon raqami va 4 xonali PIN kifoya. PIN scrypt bilan xeshlanadi, sessiya HttpOnly cookie’da saqlanadi. Avvaldan ro‘yxatdan o‘tgan foydalanuvchilar eski paroli bilan kirishi mumkin.
 
-Telefon orqali SMS tasdiqlash/SMS-kod va parolni tiklash xizmati hali ulanmagan; hozir telefon raqami + parol bilan ro‘yxatdan o‘tish va kirish ishlaydi.
+SMS orqali telefonni tasdiqlash va PIN’ni tiklash xizmati ulanmagan; shu sabab telefon raqamining egasi ekanini tasdiqlash hozircha amalga oshmaydi.
 
 ## Karta to‘lovlari
 

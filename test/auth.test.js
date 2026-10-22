@@ -43,7 +43,7 @@ test("register creates a persistent account and secure session cookie", async fu
         body: JSON.stringify({
             name: "Ali Valiyev",
             phone: "+998 90 123 45 67",
-            password: "strong-pass-123"
+            password: "1234"
         })
     });
 
@@ -84,13 +84,24 @@ test("session restores account and protects payment settings", async function() 
 });
 
 test("rejects duplicate accounts and incorrect credentials", async function() {
+    const invalidPin = await request("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: "Another Person",
+            phone: "998901234568",
+            password: "123"
+        })
+    });
+    assert.equal(invalidPin.status, 400);
+
     const duplicate = await request("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
             name: "Another Person",
             phone: "998901234567",
-            password: "strong-pass-123"
+            password: "1234"
         })
     });
     assert.equal(duplicate.status, 409);
@@ -98,7 +109,7 @@ test("rejects duplicate accounts and incorrect credentials", async function() {
     const login = await request("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: "998901234567", password: "wrong-password" })
+        body: JSON.stringify({ phone: "998901234567", password: "9999" })
     });
     assert.equal(login.status, 401);
 });
@@ -107,7 +118,7 @@ test("logs in with the created account and restores its session", async function
     const login = await request("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone: "998901234567", password: "strong-pass-123" })
+        body: JSON.stringify({ phone: "998901234567", password: "1234" })
     });
     assert.equal(login.status, 200);
     const loginCookie = login.headers.get("set-cookie").split(";")[0];
@@ -130,7 +141,7 @@ test("accepts same-site HTTPS requests behind the Render proxy", async function(
             Origin: "https://127.0.0.1:" + server.address().port,
             "X-Forwarded-Proto": "https"
         },
-        body: JSON.stringify({ phone: "998901234567", password: "strong-pass-123" })
+        body: JSON.stringify({ phone: "998901234567", password: "1234" })
     });
     assert.equal(response.status, 200);
 });
@@ -149,7 +160,7 @@ test("requires a valid session to submit orders and rejects cross-origin auth", 
             "Content-Type": "application/json",
             Origin: "https://attacker.example"
         },
-        body: JSON.stringify({ phone: "998901234567", password: "strong-pass-123" })
+        body: JSON.stringify({ phone: "998901234567", password: "1234" })
     });
     assert.equal(crossOrigin.status, 403);
 });

@@ -268,8 +268,8 @@ app.post("/api/auth/register", allowAuthAttempt, async function(req, res) {
     const name = typeof body.name === "string" ? body.name.trim() : "";
     const phone = typeof body.phone === "string" ? normalizePhone(body.phone) : "";
     const password = typeof body.password === "string" ? body.password : "";
-    if (!name || name.length > 80 || !phone || password.length < 10 || password.length > 128) {
-        return res.status(400).json({ error: "Ism, telefon raqami va kamida 10 belgili parolni to‘g‘ri kiriting." });
+    if (!name || name.length > 80 || !phone || !/^\d{4}$/.test(password)) {
+        return res.status(400).json({ error: "Ism, telefon raqami va 4 xonali PINni to‘g‘ri kiriting." });
     }
     try {
         const passwordHash = await createPasswordHash(password);

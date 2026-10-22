@@ -22,7 +22,7 @@
     <form class="signup-box" id="signupForm">
         <p class="signup-eyebrow">OshSaroyga xush kelibsiz</p>
         <h2 id="signupTitle">Akkaunt yarating</h2>
-        <p class="signup-description">Buyurtmalaringizni kuzatish va profilni boshqarish uchun akkaunt yarating.</p>
+        <p class="signup-description">Ismingiz, telefon raqamingiz va oson esda qoladigan 4 xonali PIN bilan akkaunt yarating.</p>
 
         <label for="signupName">Ism-familiya</label>
         <input
@@ -46,15 +46,17 @@
             required
         >
 
-        <label for="signupPassword">Parol</label>
+        <label for="signupPassword">4 xonali PIN</label>
         <input
             type="password"
             id="signupPassword"
             name="password"
-            placeholder="Kamida 10 ta belgi"
+            placeholder="Masalan, 1234"
             autocomplete="new-password"
-            minlength="10"
-            maxlength="128"
+            inputmode="numeric"
+            pattern="[0-9]{4}"
+            minlength="4"
+            maxlength="4"
             required
         >
 
@@ -71,8 +73,8 @@
         <label for="loginPhone">Telefon raqami</label>
         <input type="tel" id="loginPhone" name="phone" placeholder="+998 90 123 45 67" autocomplete="username" maxlength="30" required>
 
-        <label for="loginPassword">Parol</label>
-        <input type="password" id="loginPassword" name="password" placeholder="Parolingiz" autocomplete="current-password" maxlength="128" required>
+        <label for="loginPassword">PIN yoki parol</label>
+        <input type="password" id="loginPassword" name="password" placeholder="4 xonali PIN yoki eski parol" autocomplete="current-password" inputmode="numeric" maxlength="128" required>
 
         <p id="loginStatus" role="status" aria-live="polite"></p>
         <button id="loginSubmit" type="submit">Kirish</button>
