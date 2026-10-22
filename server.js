@@ -4,6 +4,7 @@ const { existsSync, mkdirSync } = require("node:fs");
 const { createHash, randomBytes, scrypt, timingSafeEqual } = require("node:crypto");
 const { promisify } = require("node:util");
 const { DatabaseSync } = require("node:sqlite");
+const { Pool } = require("pg");
 
 const envPath = path.join(__dirname, ".env");
 if (existsSync(envPath)) {
@@ -15,6 +16,7 @@ if (existsSync(envPath)) {
 
 const app = express();
 app.disable("x-powered-by");
+app.set("trust proxy", 1);
 const chatId = "8819760322";
 const scryptAsync = promisify(scrypt);
 const sessionCookieName = "oshsaroy_session";
@@ -44,27 +46,95 @@ const catalog = new Map([
     ["Quyma muzqaymoq 1 kg", 45000]
 ]);
 
-const databasePath = process.env.DATABASE_PATH || path.join(__dirname, ".data", "oshsaroy.sqlite");
-mkdirSync(path.dirname(databasePath), { recursive: true });
-const database = new DatabaseSync(databasePath);
-database.exec(`
-    PRAGMA foreign_keys = ON;
-    PRAGMA journal_mode = WAL;
-    PRAGMA busy_timeout = 5000;
-    CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY,
-        name TEXT NOT NULL,
-        phone TEXT NOT NULL UNIQUE,
-        password_hash TEXT NOT NULL,
-        created_at INTEGER NOT NULL
-    );
-    CREATE TABLE IF NOT EXISTS sessions (
-        token_hash TEXT PRIMARY KEY,
-        user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        expires_at INTEGER NOT NULL
-    );
-    CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions(expires_at);
-`);
+let sqliteDatabase;
+let postgresPool;
+const usePostgres = Boolean(process.env.DATABASE_URL);
+
+async function initializeDatabase() {
+    if (usePostgres) {
+        postgresPool = new Pool({ connectionString: process.env.DATABASE_URL });
+        postgresPool.on("error", function(error) {
+            console.error("PostgreSQL ulanishida xatolik:", error.message);
+        });
+        await postgresPool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                id BIGSERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                phone TEXT NOT NULL UNIQUE,
+                password_hash TEXT NOT NULL,
+                created_at BIGINT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS sessions (
+                token_hash TEXT PRIMARY KEY,
+                user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                expires_at BIGINT NOT NULL
+            );
+            CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions(expires_at);
+        `);
+        return;
+    }
+
+    const databasePath = process.env.DATABASE_PATH || path.join(__dirname, ".data", "oshsaroy.sqlite");
+    mkdirSync(path.dirname(databasePath), { recursive: true });
+    sqliteDatabase = new DatabaseSync(databasePath);
+    sqliteDatabase.exec(`
+        PRAGMA foreign_keys = ON;
+        PRAGMA journal_mode = WAL;
+        PRAGMA busy_timeout = 5000;
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            phone TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            created_at INTEGER NOT NULL
+        );
+        CREATE TABLE IF NOT EXISTS sessions (
+            token_hash TEXT PRIMARY KEY,
+            user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+            expires_at INTEGER NOT NULL
+        );
+        CREATE INDEX IF NOT EXISTS sessions_expiry_idx ON sessions(expires_at);
+    `);
+}
+
+const databaseReady = initializeDatabase();
+databaseReady.catch(function(error) {
+    console.error("Akkauntlar bazasini ishga tushirib bo‘lmadi:", error.message);
+});
+
+async function databaseGet(sql, parameters) {
+    if (usePostgres) {
+        let parameterIndex = 0;
+        const postgresSql = sql.replace(/\?/g, function() {
+            parameterIndex += 1;
+            return "$" + parameterIndex;
+        });
+        const result = await postgresPool.query(postgresSql, parameters);
+        return result.rows[0];
+    }
+    return sqliteDatabase.prepare(sql).get(...parameters);
+}
+
+async function databaseRun(sql, parameters) {
+    if (usePostgres) {
+        let parameterIndex = 0;
+        const postgresSql = sql.replace(/\?/g, function() {
+            parameterIndex += 1;
+            return "$" + parameterIndex;
+        });
+        return postgresPool.query(postgresSql, parameters);
+    }
+    return sqliteDatabase.prepare(sql).run(...parameters);
+}
+
+async function requireDatabase(req, res, next) {
+    try {
+        await databaseReady;
+        return next();
+    } catch (error) {
+        return res.status(503).json({ error: "Akkauntlar bazasi hozir ishlamayapti. Keyinroq qayta urinib ko‘ring." });
+    }
+}
 
 app.use(express.json({ limit: "16kb" }));
 app.use(function(req, res, next) {
@@ -83,6 +153,8 @@ app.use(function(req, res, next) {
     }
     next();
 });
+app.use("/api", requireDatabase);
+app.use("/order", requireDatabase);
 app.use(express.static(__dirname));
 
 app.get("/", function(req, res) {
@@ -96,7 +168,7 @@ function normalizePhone(phone) {
 }
 
 function safeUser(user) {
-    return { id: user.id, name: user.name, phone: user.phone };
+    return { id: Number(user.id), name: user.name, phone: user.phone };
 }
 
 function setSessionCookie(res, token) {
@@ -121,26 +193,26 @@ function readCookie(req, name) {
     return entry ? entry.slice(name.length + 1) : "";
 }
 
-function requestUser(req) {
+async function requestUser(req) {
     const token = readCookie(req, sessionCookieName);
     if (!/^[A-Za-z0-9_-]{40,50}$/.test(token)) return null;
     const tokenHash = createHash("sha256").update(token).digest("hex");
-    const row = database.prepare(`
+    const row = await databaseGet(`
         SELECT users.id, users.name, users.phone
         FROM sessions JOIN users ON users.id = sessions.user_id
         WHERE sessions.token_hash = ? AND sessions.expires_at > ?
-    `).get(tokenHash, Date.now());
+    `, [tokenHash, Date.now()]);
     if (!row) return null;
     req.user = row;
     req.sessionTokenHash = tokenHash;
     return row;
 }
 
-function requireUser(req, res, next) {
-    if (!requestUser(req)) {
+async function requireUser(req, res, next) {
+    if (!await requestUser(req)) {
         return res.status(401).json({ error: "Davom etish uchun akkauntingizga kiring." });
     }
-    next();
+    return next();
 }
 
 function allowAuthAttempt(req, res, next) {
@@ -179,12 +251,15 @@ async function verifyPassword(password, storedHash) {
     return timingSafeEqual(expected, actual);
 }
 
-function createSession(res, userId) {
+async function createSession(res, userId) {
     const token = randomBytes(32).toString("base64url");
     const expiresAt = Date.now() + sessionDurationMs;
-    database.prepare("DELETE FROM sessions WHERE expires_at <= ?").run(Date.now());
-    database.prepare("INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)")
-        .run(createHash("sha256").update(token).digest("hex"), userId, expiresAt);
+    await databaseRun("DELETE FROM sessions WHERE expires_at <= ?", [Date.now()]);
+    await databaseRun("INSERT INTO sessions (token_hash, user_id, expires_at) VALUES (?, ?, ?)", [
+        createHash("sha256").update(token).digest("hex"),
+        userId,
+        expiresAt
+    ]);
     setSessionCookie(res, token);
 }
 
@@ -196,20 +271,17 @@ app.post("/api/auth/register", allowAuthAttempt, async function(req, res) {
     if (!name || name.length > 80 || !phone || password.length < 10 || password.length > 128) {
         return res.status(400).json({ error: "Ism, telefon raqami va kamida 10 belgili parolni to‘g‘ri kiriting." });
     }
-    if (database.prepare("SELECT 1 FROM users WHERE phone = ?").get(phone)) {
-        return res.status(409).json({ error: "Bu telefon raqamida akkaunt bor. Kirish bo‘limidan foydalaning." });
-    }
-
     try {
         const passwordHash = await createPasswordHash(password);
-        const result = database.prepare(
-            "INSERT INTO users (name, phone, password_hash, created_at) VALUES (?, ?, ?, ?)"
-        ).run(name, phone, passwordHash, Date.now());
-        const user = { id: Number(result.lastInsertRowid), name: name, phone: phone };
-        createSession(res, user.id);
+        const result = await databaseGet(
+            "INSERT INTO users (name, phone, password_hash, created_at) VALUES (?, ?, ?, ?) RETURNING id",
+            [name, phone, passwordHash, Date.now()]
+        );
+        const user = { id: Number(result.id), name: name, phone: phone };
+        await createSession(res, user.id);
         return res.status(201).json({ user: safeUser(user) });
     } catch (error) {
-        if (error.errcode === 2067) {
+        if (error.code === "23505" || error.errcode === 2067) {
             return res.status(409).json({ error: "Bu telefon raqamida akkaunt bor. Kirish bo‘limidan foydalaning." });
         }
         console.error("Akkaunt yaratishda xatolik:", error.message);
@@ -225,7 +297,7 @@ app.post("/api/auth/login", allowAuthAttempt, async function(req, res) {
         return res.status(400).json({ error: "Telefon raqami va parolni to‘g‘ri kiriting." });
     }
 
-    const user = database.prepare("SELECT id, name, phone, password_hash FROM users WHERE phone = ?").get(phone);
+    const user = await databaseGet("SELECT id, name, phone, password_hash FROM users WHERE phone = ?", [phone]);
     const valid = user
         ? await verifyPassword(password, user.password_hash)
         : await verifyPassword(password, "scrypt$00000000000000000000000000000000$" + "00".repeat(64));
@@ -233,12 +305,12 @@ app.post("/api/auth/login", allowAuthAttempt, async function(req, res) {
         return res.status(401).json({ error: "Telefon raqami yoki parol noto‘g‘ri." });
     }
 
-    createSession(res, user.id);
+    await createSession(res, user.id);
     return res.json({ user: safeUser(user) });
 });
 
-app.get("/api/auth/me", function(req, res) {
-    const user = requestUser(req);
+app.get("/api/auth/me", async function(req, res) {
+    const user = await requestUser(req);
     if (!user) {
         clearSessionCookie(res);
         return res.json({ user: null });
@@ -246,8 +318,8 @@ app.get("/api/auth/me", function(req, res) {
     return res.json({ user: safeUser(user) });
 });
 
-app.post("/api/auth/logout", requireUser, function(req, res) {
-    database.prepare("DELETE FROM sessions WHERE token_hash = ?").run(req.sessionTokenHash);
+app.post("/api/auth/logout", requireUser, async function(req, res) {
+    await databaseRun("DELETE FROM sessions WHERE token_hash = ?", [req.sessionTokenHash]);
     clearSessionCookie(res);
     return res.json({ message: "Akkauntdan chiqdingiz." });
 });
@@ -268,7 +340,7 @@ app.post("/api/payment-methods", requireUser, function(req, res) {
 });
 
 app.post("/order", async function(req, res) {
-    if (!requestUser(req)) {
+    if (!await requestUser(req)) {
         return res.status(401).json({ error: "Buyurtma berish uchun akkauntingizga kiring." });
     }
     const body = req.body;
@@ -372,5 +444,6 @@ if (require.main === module) {
 
 module.exports = app;
 app.locals.closeDatabase = function() {
-    database.close();
+    if (postgresPool) return postgresPool.end();
+    if (sqliteDatabase) sqliteDatabase.close();
 };

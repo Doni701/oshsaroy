@@ -28,7 +28,7 @@ after(async function() {
             });
         });
     }
-    app.locals.closeDatabase();
+    await app.locals.closeDatabase();
     rmSync(temporaryDirectory, { recursive: true, force: true });
 });
 
@@ -101,6 +101,38 @@ test("rejects duplicate accounts and incorrect credentials", async function() {
         body: JSON.stringify({ phone: "998901234567", password: "wrong-password" })
     });
     assert.equal(login.status, 401);
+});
+
+test("logs in with the created account and restores its session", async function() {
+    const login = await request("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: "998901234567", password: "strong-pass-123" })
+    });
+    assert.equal(login.status, 200);
+    const loginCookie = login.headers.get("set-cookie").split(";")[0];
+
+    const currentUser = await request("/api/auth/me", {
+        headers: { Cookie: loginCookie }
+    });
+    assert.deepEqual((await currentUser.json()).user, {
+        id: 1,
+        name: "Ali Valiyev",
+        phone: "998901234567"
+    });
+});
+
+test("accepts same-site HTTPS requests behind the Render proxy", async function() {
+    const response = await request("/api/auth/login", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            Origin: "https://127.0.0.1:" + server.address().port,
+            "X-Forwarded-Proto": "https"
+        },
+        body: JSON.stringify({ phone: "998901234567", password: "strong-pass-123" })
+    });
+    assert.equal(response.status, 200);
 });
 
 test("requires a valid session to submit orders and rejects cross-origin auth", async function() {

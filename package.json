@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "express": "^5.2.1",
-    "node-telegram-bot-api": "^1.2.0"
+    "node-telegram-bot-api": "^1.2.0",
+    "pg": "^8.23.1"
   }
 }
